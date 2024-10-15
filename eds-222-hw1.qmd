@@ -102,11 +102,14 @@ The goal of pollution monitoring in Lahore is to measure the average pollution c
 
 1.  What is the *population* in this setting? Please be precise.
 
-The population in this setting is the population of the entire city in question, Lahore, Pakistan. The population of Lahore, Pakistan in 2024 is 14,407,000.
+
+The population in this setting is the population of the entire city in question, Lahore, Pakistan over the given time frame.
 
 2.  What are the *samples* in this setting? Please be precise.
 
-The samples are measurements of airborne particulate matter in different geographic locations across Lahore, Pakistan, taken both by the government and crowd-sourced individuals from 11/4/18 to 11/30/19.
+The samples are measurements of airborne particulate matter in different geographic locations across Lahore, Pakistan, taken both by the government and crowd-sourced individuals 
+
+The locations where the samples were taken are observations, and the crowd-sourced and government data as a whole are two samples of the entire population of Lahore from 11/4/18 to 11/30/19.
 
 ```{r}
 # Find the data collection time frame of the crowdsourced dataset
@@ -121,6 +124,8 @@ print(paste("The date range for the crowd-sourced dataset is", crowd_range[1], "
 3.  These samples were not randomly collected from across locations in Lahore. Given the sampling approaches described above, discuss possible biases that may enter when we use these samples to construct estimates of population parameters.
 
 The dataset from the government might have a selection bias in the sense that they may have chosen less polluted areas of the city to place their air quality sensors. They also may have chosen less locations to sample from and taken less samples as a whole. At a glance, the mean value of the 'PM' column in the government dataset is significantly lower than that of the same column in the crowd-sourced dataset.
+dtaa being computed by citizens who had expertise collecting this type of datat, 2 daata collected by wealthy who may be living in an area with better air quality. and 3 samples being ocllected at different periods of time and frequency because the sampling mehtods are not standardized
+
 
 ```{r}
 # Find the mean of the 'PM' column for each datatset to compare them
@@ -218,7 +223,9 @@ print(comb_data)
 # Create a subset of 'comb_data' with 1000 random observations
 # Set seed for reproducibility
 set.seed(454)
-rand_samp <- comb_data %>% sample_n(1000)
+rand_samp <- comb_data %>%
+  group_by() %>%
+  slice_sample(n = 1000)
 
 print(paste("Here is a new dataset with a random sample of 1000 observations drawn from the pooled dataset."))
 
@@ -237,7 +244,7 @@ comb_data <- comb_data %>%
 set.seed(454)
 strat_data <- comb_data %>%
   group_by(lat_stratum) %>%
-  sample_n(200) %>%
+  slice_sample(n = 200) %>%
   ungroup()
 
 print(paste("Here is a stratified dataset with a random sample of 200 observations drawn from the pooled dataset."))
