@@ -268,11 +268,11 @@ Tip
 <ol type="1">
 <li>What is the <em>population</em> in this setting? Please be precise.</li>
 </ol>
-<p>The population in this setting is the population of the entire city in question, Lahore, Pakistan. The population of Lahore, Pakistan in 2024 is 14,407,000.</p>
+<p>The population in this setting is the air quality of the entire city in question, Lahore, Pakistan over the given time frame, 11/4/18 to 11/30/19.</p>
 <ol start="2" type="1">
 <li>What are the <em>samples</em> in this setting? Please be precise.</li>
 </ol>
-<p>The samples are measurements of airborne particulate matter in different geographic locations across Lahore, Pakistan, taken both by the government and crowd-sourced individuals from 11/4/18 to 11/30/19.</p>
+<p>The samples are two sets of measurements of airborne particulate matter in different geographic locations across Lahore, Pakistan, taken both by the government and crowd-sourced individuals. One sample is crowd-sourced and consists of data collected from households that voluntarily installed air quality monitors. the quantity and location of these household monitors represent the sample. The second sample is from government air quality monitors, installed in select locations in the city. Both samples measure the air quality of locations in Lahore from 11/4/18 to 11/30/19, but the locatoin and quantity of monitors used differs across the two samples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -292,6 +292,7 @@ Tip
 <li>These samples were not randomly collected from across locations in Lahore. Given the sampling approaches described above, discuss possible biases that may enter when we use these samples to construct estimates of population parameters.</li>
 </ol>
 <p>The dataset from the government might have a selection bias in the sense that they may have chosen less polluted areas of the city to place their air quality sensors. They also may have chosen less locations to sample from and taken less samples as a whole. At a glance, the mean value of the ‘PM’ column in the government dataset is significantly lower than that of the same column in the crowd-sourced dataset.</p>
+<p>The crowdsourced data may be biased as well due to self-selection bias, those who are aware of the air quality issue may be eager to volunteer to collect samples. It’s also possible that the households who volunteered to collect air quality samples were not experts in collecting this type of data. Furthermore, low income areas tend to be less trusting of studies like this so the data may be collected by wealthy families who may be living in an area with better air quality. We also have no way of knowing how accurate the data is because the sampling methods are not standardized.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -345,7 +346,8 @@ Tip
 <ol start="3" type="1">
 <li>Are the differences in mean pollution as expected, given what we know about the sampling strategies?</li>
 </ol>
-<p>Given that we know about the sampling bias, yes, the data from the government that indicates lower levels of pollution than the crowd-sourced dataset is as expected.</p>
+<p>Given that we know about the sampling bias, the differences in mean are expected. The data from the government that indicates lower levels of pollution than the crowd-sourced dataset. The government monitors were placed in conspicuously clean air areas, likely intentionally to obscure the severity of the problem. The crowdsourced data was collected by amateurs who have no experience with this type of data collection, potentially affecting the resulting measurements. It’s also possible that the types of families that would volunteer to host an air quality monitor are more likely to be in wealthier areas, which may have cleaner air than poorer neighborhoods. Even though the mean is much higher than the government data, it may still be biased and not reflect an accurate representation of the air quality across Lahore in the given time frame.</p>
+<p>XXXX Discuss BIAS</p>
 </section>
 <section id="question-4" class="level3">
 <h3 class="anchored" data-anchor-id="question-4">Question 4</h3>
@@ -454,9 +456,11 @@ Tip
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a subset of 'comb_data' with 1000 random observations</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">454</span>)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>rand_samp <span class="ot">&lt;-</span> comb_data <span class="sc">%&gt;%</span> <span class="fu">sample_n</span>(<span class="dv">1000</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Here is a new dataset with a random sample of 1000 observations drawn from the pooled dataset."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>rand_samp <span class="ot">&lt;-</span> comb_data <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Here is a new dataset with a random sample of 1000 observations drawn from the pooled dataset."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Here is a new dataset with a random sample of 1000 observations drawn from the pooled dataset."</code></pre>
@@ -495,7 +499,7 @@ Tip
 <span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">454</span>)</span>
 <span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>strat_data <span class="ot">&lt;-</span> comb_data <span class="sc">%&gt;%</span></span>
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(lat_stratum) <span class="sc">%&gt;%</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_n</span>(<span class="dv">200</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">200</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Here is a stratified dataset with a random sample of 200 observations drawn from the pooled dataset."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
